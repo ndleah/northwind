@@ -363,6 +363,7 @@ Filtered on the following conditions:
 
 1. the order date is between 1997 and 1998
 2. their total number of orders is greater than 35 orders
+
 Finally order the results by total freight (descending order).
 
 <details>
