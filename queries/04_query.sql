@@ -31,3 +31,6 @@ AND total_number_orders > 35
 ORDER BY total_freight DESC;
 
 --Result
+SELECT
+		EXTRACT(MONTH FROM txn_date) AS month_part,
+		TO_CHAR(txn_date, 'Month') AS month,
