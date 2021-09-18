@@ -308,6 +308,54 @@ Output example
 
 </details>
 
+<details>
+<summary>
+💡 Solution
+</summary>
+
+```sql
+SELECT
+	product_name,
+	unit_price
+FROM products
+WHERE unit_price BETWEEN 20 AND 50
+AND discontinued = 0
+ORDER BY unit_price DESC;
+```
+
+| "product_name"                     | "unit_price" |
+|------------------------------------|--------------|
+| "Tarte au sucre"                   | "49.3"       |
+| "Ipoh Coffee"                      | "46"         |
+| "Vegie-spread"                     | "43.9"       |
+| "Schoggi Schokolade"               | "43.9"       |
+| "Northwoods Cranberry Sauce"       | "40"         |
+| "Gnocchi di nonna Alice"           | "38"         |
+| "Queso Manchego La Pastora"        | "38"         |
+| "Gudbrandsdalsost"                 | "36"         |
+| "Mozzarella di Giovanni"           | "34.8"       |
+| "Camembert Pierrot"                | "34"         |
+| "Wimmers gute Semmelknödel"        | "33.25"      |
+| "Mascarpone Fabioli"               | "32"         |
+| "Gumbär Gummibärchen"              | "31.23"      |
+| "Ikura"                            | "31"         |
+| "Uncle Bob's Organic Dried Pears"  | "30"         |
+| "Sirop d'érable"                   | "28.5"       |
+| "Gravad lax"                       | "26"         |
+| "Nord-Ost Matjeshering"            | "25.89"      |
+| "Grandma's Boysenberry Spread"     | "25"         |
+| "Pâté chinois"                     | "24"         |
+| "Tofu"                             | "23.25"      |
+| "Chef Anton's Cajun Seasoning"     | "22"         |
+| "Flotemysost"                      | "21.5"       |
+| "Louisiana Fiery Hot Pepper Sauce" | "21.05"      |
+| "Queso Cabrales"                   | "21"         |
+| "Gustaf's Knäckebröd"              | "21"         |
+| "Maxilaku"                         | "20"         |
+
+
+</details>
+
 ### ✅ **Question 2**
 
 The Logistics Team wants to do a retrospection of their performances for the year 1998, in order to identify for which countries they didn’t perform well. They asked you to provide them a list of countries with the following information:
@@ -331,6 +379,44 @@ Output example
 
 </details>
 
+<details>
+<summary>
+💡 Solution
+</summary>
+
+```sql
+WITH cte_avg_days AS (
+	SELECT
+		ship_country,
+		ROUND(AVG(
+			EXTRACT(DAY FROM (shipped_date - order_date) * INTERVAL '1 DAY')
+			)::NUMERIC,
+		2) AS average_days_between_order_shipping,
+		COUNT(*) AS total_number_orders
+	FROM orders
+	WHERE EXTRACT(YEAR FROM order_date) = 1998
+	GROUP BY 
+		ship_country
+	ORDER BY ship_country
+	)
+SELECT * FROM cte_avg_days
+WHERE average_days_between_order_shipping >= 5
+AND total_number_orders > 10;
+```
+| "ship_country" | "average_days_between_order_shipping" | "total_number_orders" |
+|----------------|---------------------------------------|-----------------------|
+| "Austria"      | "5.89"                                | "11"                  |
+| "Brazil"       | "8.12"                                | "28"                  |
+| "France"       | "9.43"                                | "23"                  |
+| "Germany"      | "5.38"                                | "34"                  |
+| "Spain"        | "7.83"                                | "12"                  |
+| "Sweden"       | "13.29"                               | "14"                  |
+| "UK"           | "6.25"                                | "16"                  |
+| "USA"          | "7.89"                                | "39"                  |
+| "Venezuela"    | "8.73"                                | "18"                  |
+
+
+</details>
 
 ### ✅ **Question 3**
 The HR Team wants to know for each employee what was their age on the date they joined the company and who they currently report to. Provide them with a list of every employees with the following information:
@@ -349,6 +435,42 @@ Output example
 </summary>
 
 ![Q3_output](/img/Q3.png)
+
+</details>
+
+<details>
+<summary>
+💡 Solution
+</summary>
+
+```sql
+SELECT
+    CONCAT(e.first_name, ' ', e.last_name) AS employee_full_name,
+	e.title AS employee_title,
+	EXTRACT(YEAR FROM AGE(e.hire_date, e.birth_date))::INT AS employee_age,
+	CONCAT(m.first_name, ' ', m.last_name) AS manager_full_name,
+	m.title AS manager_title
+FROM
+    employees AS e
+INNER JOIN employees AS m 
+ON m.employee_id = e.reports_to
+ORDER BY
+    employee_age,
+	employee_full_name;
+```
+
+| "employee_full_name" | "employee_title"           | "employee_age" | "manager_full_name" | "manager_title"         |
+|----------------------|----------------------------|----------------|---------------------|-------------------------|
+| "Anne Dodsworth"     | "Sales Representative"     | 28             | "Steven Buchanan"   | "Sales Manager"         |
+| "Janet Leverling"    | "Sales Representative"     | 28             | "Andrew Fuller"     | "Vice President, Sales" |
+| "Michael Suyama"     | "Sales Representative"     | 30             | "Steven Buchanan"   | "Sales Manager"         |
+| "Robert King"        | "Sales Representative"     | 33             | "Steven Buchanan"   | "Sales Manager"         |
+| "Laura Callahan"     | "Inside Sales Coordinator" | 36             | "Andrew Fuller"     | "Vice President, Sales" |
+| "Steven Buchanan"    | "Sales Manager"            | 38             | "Andrew Fuller"     | "Vice President, Sales" |
+| "Nancy Davolio"      | "Sales Representative"     | 43             | "Andrew Fuller"     | "Vice President, Sales" |
+| "Margaret Peacock"   | "Sales Representative"     | 55             | "Andrew Fuller"     | "Vice President, Sales" |
+
+
 
 </details>
 
@@ -372,6 +494,17 @@ Output example
 </summary>
 
 ![Q4_output](/img/Q4.png)
+
+</details>
+
+<details>
+<summary>
+💡 Solution
+</summary>
+
+
+
+
 
 </details>
 
@@ -401,6 +534,49 @@ Output example
 
 </details>
 
+<details>
+<summary>
+💡 Solution
+</summary>
+
+```sql
+WITH cte_price AS (
+SELECT
+	d.product_id,
+	p.product_name,
+	LEAD(d.unit_price) OVER (PARTITION BY p.product_name ORDER BY o.order_date) AS current_price,
+	LAG(d.unit_price) OVER (PARTITION BY p.product_name ORDER BY o.order_date) AS previous_unit_price
+FROM products AS p
+INNER JOIN order_details AS d
+ON p.product_id = d.product_id
+INNER JOIN orders AS o
+ON d.order_id = o.order_id
+)
+SELECT
+	c.product_name,
+	c.current_price,
+	c.previous_unit_price,
+	ROUND(100*(c.current_price - c.previous_unit_price)/c.previous_unit_price) AS percentage_increase
+FROM cte_price AS c
+INNER JOIN order_details AS d
+ON c.product_id = d.product_id
+WHERE c.current_price != c.previous_unit_price
+GROUP BY 
+	c.product_name,
+	c.current_price,
+	c.previous_unit_price
+HAVING COUNT(DISTINCT d.order_id) > 10
+AND ROUND(100*(c.current_price - c.previous_unit_price)/c.previous_unit_price) NOT BETWEEN 20 AND 30;
+```
+
+| "product_name"                  | "current_price" | "previous_unit_price" | "percentage_increase" |
+|---------------------------------|-----------------|-----------------------|-----------------------|
+| "Mozzarella di Giovanni"        | 27.8            | 34.8                  | -20                   |
+| "Singaporean Hokkien Fried Mee" | 11.2            | 9.8                   | 14                    |
+
+
+</details>
+
 ### ✅ **Question 6**
 The Pricing Team wants to know how each category performs according to their price range. In order to help them they asked you to provide them a list of categories with:
 
@@ -427,6 +603,61 @@ Output example
 
 </details>
 
+<details>
+<summary>
+💡 Solution
+</summary>
+
+```sql
+SELECT
+	c.category_name,
+	CASE 
+		WHEN p.unit_price < 20 THEN '1. Below $20'
+		WHEN p.unit_price >= 20 AND p.unit_price <= 50 THEN '2. $20 - $50'
+		WHEN p.unit_price > 50 THEN '3. Over $50'
+		END AS price_range,
+	ROUND(SUM(d.unit_price * d.quantity)) AS total_amount,
+	COUNT(DISTINCT d.order_id) AS total_number_orders
+FROM categories AS c
+INNER JOIN products AS p
+ON c.category_id =  p.category_id
+INNER JOIN order_details AS d
+ON d.product_id =  p.product_id
+GROUP BY 
+	c.category_name,
+	price_range
+ORDER BY 
+	c.category_name,
+	price_range;
+```
+
+| "category_name"  | "price_range"  | "total_amount" | "total_number_orders" |
+|------------------|----------------|----------------|-----------------------|
+| "Beverages"      | "1. Below $20" | 111464         | 317                   |
+| "Beverages"      | "2. $20 - $50" | 25079          | 28                    |
+| "Beverages"      | "3. Over $50"  | 149984         | 24                    |
+| "Condiments"     | "1. Below $20" | 28622          | 85                    |
+| "Condiments"     | "2. $20 - $50" | 85073          | 121                   |
+| "Confections"    | "1. Below $20" | 57369          | 197                   |
+| "Confections"    | "2. $20 - $50" | 96094          | 106                   |
+| "Confections"    | "3. Over $50"  | 23636          | 16                    |
+| "Dairy Products" | "1. Below $20" | 17886          | 81                    |
+| "Dairy Products" | "2. $20 - $50" | 157148         | 204                   |
+| "Dairy Products" | "3. Over $50"  | 76296          | 54                    |
+| "Grains/Cereals" | "1. Below $20" | 25364          | 99                    |
+| "Grains/Cereals" | "2. $20 - $50" | 75363          | 91                    |
+| "Meat/Poultry"   | "1. Below $20" | 5121           | 36                    |
+| "Meat/Poultry"   | "2. $20 - $50" | 76504          | 96                    |
+| "Meat/Poultry"   | "3. Over $50"  | 96563          | 36                    |
+| "Produce"        | "1. Below $20" | 2566           | 13                    |
+| "Produce"        | "2. $20 - $50" | 57960          | 81                    |
+| "Produce"        | "3. Over $50"  | 44743          | 39                    |
+| "Seafood"        | "1. Below $20" | 69673          | 217                   |
+| "Seafood"        | "2. $20 - $50" | 39963          | 70                    |
+| "Seafood"        | "3. Over $50"  | 31988          | 27                    |
+
+</details>
+
 ### ✅ **Question 7**
 The Logistics Team wants to know what is the current state of our regional suppliers' stocks for each category of product. In order to help them they asked you to provide them a list of categories with:
 
@@ -447,6 +678,66 @@ Output example
 </summary>
 
 ![Q7_output](/img/Q7.png)
+
+</details>
+
+<details>
+<summary>
+💡 Solution
+</summary>
+
+```sql
+SELECT
+	c.category_name,
+	CASE
+		WHEN s.country IN ('Australia', 'Singapore', 'Japan' ) THEN 'Asia-Pacific'
+		WHEN s.country IN ('US', 'Brazil', 'Canada') THEN 'America'
+		ELSE 'Europe'
+	END AS supplier_region,
+	p.unit_in_stock AS units_in_stock,
+	p.unit_on_order AS units_on_order,
+	p.reorder_level 
+FROM suppliers AS s
+INNER JOIN products AS p
+ON s.supplier_id = p.supplier_id
+INNER JOIN categories AS c
+ON p.category_id = c.category_id
+WHERE s.region IS NOT NULL
+ORDER BY 
+	supplier_region,
+	c.category_name,
+	p.unit_price;
+```
+
+| "category_name"  | "supplier_region" | "units_in_stock" | "units_on_order" | "reorder_level" |
+|------------------|-------------------|------------------|------------------|-----------------|
+| "Condiments"     | "America"         | 113              | 0                | 25              |
+| "Confections"    | "America"         | 17               | 0                | 0               |
+| "Meat/Poultry"   | "America"         | 21               | 0                | 10              |
+| "Meat/Poultry"   | "America"         | 115              | 0                | 20              |
+| "Beverages"      | "Asia-Pacific"    | 15               | 10               | 30              |
+| "Condiments"     | "Asia-Pacific"    | 24               | 0                | 5               |
+| "Confections"    | "Asia-Pacific"    | 29               | 0                | 10              |
+| "Grains/Cereals" | "Asia-Pacific"    | 38               | 0                | 25              |
+| "Meat/Poultry"   | "Asia-Pacific"    | 0                | 0                | 0               |
+| "Meat/Poultry"   | "Asia-Pacific"    | 0                | 0                | 0               |
+| "Produce"        | "Asia-Pacific"    | 20               | 0                | 10              |
+| "Seafood"        | "Asia-Pacific"    | 42               | 0                | 0               |
+| "Beverages"      | "Europe"          | 52               | 0                | 10              |
+| "Beverages"      | "Europe"          | 111              | 0                | 15              |
+| "Beverages"      | "Europe"          | 20               | 0                | 15              |
+| "Condiments"     | "Europe"          | 4                | 100              | 20              |
+| "Condiments"     | "Europe"          | 76               | 0                | 0               |
+| "Condiments"     | "Europe"          | 0                | 0                | 0               |
+| "Condiments"     | "Europe"          | 53               | 0                | 0               |
+| "Condiments"     | "Europe"          | 120              | 0                | 25              |
+| "Condiments"     | "Europe"          | 6                | 0                | 0               |
+| "Dairy Products" | "Europe"          | 22               | 30               | 30              |
+| "Dairy Products" | "Europe"          | 86               | 0                | 0               |
+| "Produce"        | "Europe"          | 15               | 0                | 10              |
+| "Seafood"        | "Europe"          | 85               | 0                | 10              |
+| "Seafood"        | "Europe"          | 123              | 0                | 30              |
+
 
 </details>
 
@@ -481,6 +772,125 @@ Output example
 
 </details>
 
+<details>
+<summary>
+💡 Solution
+</summary>
+
+```sql
+WITH cte_price AS (
+	SELECT 
+		c.category_name,
+		p.product_name,
+		p.unit_price,
+		ROUND(AVG(d.unit_price)::NUMERIC,2) AS average_unit_price,
+		ROUND((PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY d.unit_price))::NUMERIC,2) AS median_unit_price
+	FROM categories AS c
+	INNER JOIN products AS p
+	ON c.category_id = p.category_id
+	INNER JOIN order_details AS d
+	ON p.product_id = d.product_id
+	WHERE p.discontinued = 0
+	GROUP BY 
+		c.category_name,
+		p.product_name,
+		p.unit_price
+)
+SELECT
+	category_name,
+	product_name,
+	unit_price,
+	average_unit_price,
+	median_unit_price,
+	CASE
+		WHEN unit_price > average_unit_price THEN 'Over Average'
+		WHEN unit_price = average_unit_price THEN 'Equal Average'
+		WHEN unit_price < average_unit_price THEN 'Below Average'
+	END AS average_unit_price_position,
+	CASE
+		WHEN unit_price > median_unit_price THEN 'Over Average'
+		WHEN unit_price = median_unit_price THEN 'Equal Average'
+		WHEN unit_price < median_unit_price THEN 'Below Average'
+	END AS median_unit_price_position
+FROM cte_price
+ORDER BY 
+	category_name,
+	product_name;
+```
+
+| "category_name"  | "product_name"                     | "unit_price" | "average_unit_price" | "median_unit_price" | "average_unit_price_position" | "median_unit_price_position" |
+|------------------|------------------------------------|--------------|----------------------|---------------------|-------------------------------|------------------------------|
+| "Beverages"      | "Côte de Blaye"                    | 263.5        | 245.93               | 263.50              | "Over Average"                | "Equal Average"              |
+| "Beverages"      | "Chartreuse verte"                 | 18           | 16.68                | 18.00               | "Over Average"                | "Equal Average"              |
+| "Beverages"      | "Ipoh Coffee"                      | 46           | 43.04                | 46.00               | "Over Average"                | "Equal Average"              |
+| "Beverages"      | "Lakkalikööri"                     | 18           | 16.98                | 18.00               | "Over Average"                | "Equal Average"              |
+| "Beverages"      | "Laughing Lumberjack Lager"        | 14           | 13.72                | 14.00               | "Over Average"                | "Equal Average"              |
+| "Beverages"      | "Outback Lager"                    | 15           | 14.15                | 15.00               | "Over Average"                | "Equal Average"              |
+| "Beverages"      | "Rhönbräu Klosterbier"             | 7.75         | 7.38                 | 7.75                | "Over Average"                | "Equal Average"              |
+| "Beverages"      | "Sasquatch Ale"                    | 14           | 12.97                | 14.00               | "Over Average"                | "Equal Average"              |
+| "Beverages"      | "Steeleye Stout"                   | 18           | 17.00                | 18.00               | "Over Average"                | "Equal Average"              |
+| "Condiments"     | "Aniseed Syrup"                    | 10           | 9.50                 | 10.00               | "Over Average"                | "Equal Average"              |
+| "Condiments"     | "Chef Anton's Cajun Seasoning"     | 22           | 20.68                | 22.00               | "Over Average"                | "Equal Average"              |
+| "Condiments"     | "Genen Shouyu"                     | 13           | 14.47                | 15.50               | "Below Average"               | "Below Average"              |
+| "Condiments"     | "Grandma's Boysenberry Spread"     | 25           | 24.17                | 25.00               | "Over Average"                | "Equal Average"              |
+| "Condiments"     | "Gula Malacca"                     | 19.45        | 18.13                | 19.45               | "Over Average"                | "Over Average"               |
+| "Condiments"     | "Louisiana Fiery Hot Pepper Sauce" | 21.05        | 19.46                | 21.05               | "Over Average"                | "Below Average"              |
+| "Condiments"     | "Louisiana Hot Spiced Okra"        | 17           | 15.30                | 15.30               | "Over Average"                | "Over Average"               |
+| "Condiments"     | "Northwoods Cranberry Sauce"       | 40           | 38.77                | 40.00               | "Over Average"                | "Equal Average"              |
+| "Condiments"     | "Original Frankfurter grüne Soße"  | 13           | 12.11                | 13.00               | "Over Average"                | "Equal Average"              |
+| "Condiments"     | "Sirop d'érable"                   | 28.5         | 27.79                | 28.50               | "Over Average"                | "Equal Average"              |
+| "Condiments"     | "Vegie-spread"                     | 43.9         | 40.79                | 43.90               | "Over Average"                | "Over Average"               |
+| "Confections"    | "Chocolade"                        | 12.75        | 11.90                | 12.75               | "Over Average"                | "Equal Average"              |
+| "Confections"    | "Gumbär Gummibärchen"              | 31.23        | 28.86                | 31.23               | "Over Average"                | "Below Average"              |
+| "Confections"    | "Maxilaku"                         | 20           | 18.48                | 20.00               | "Over Average"                | "Equal Average"              |
+| "Confections"    | "NuNuCa Nuß-Nougat-Creme"          | 14           | 13.07                | 14.00               | "Over Average"                | "Equal Average"              |
+| "Confections"    | "Pavlova"                          | 17.45        | 16.38                | 17.45               | "Over Average"                | "Over Average"               |
+| "Confections"    | "Scottish Longbreads"              | 12.5         | 11.54                | 12.50               | "Over Average"                | "Equal Average"              |
+| "Confections"    | "Schoggi Schokolade"               | 43.9         | 40.97                | 43.90               | "Over Average"                | "Over Average"               |
+| "Confections"    | "Sir Rodney's Marmalade"           | 81           | 75.94                | 81.00               | "Over Average"                | "Equal Average"              |
+| "Confections"    | "Sir Rodney's Scones"              | 10           | 9.38                 | 10.00               | "Over Average"                | "Equal Average"              |
+| "Confections"    | "Tarte au sucre"                   | 49.3         | 46.41                | 49.30               | "Over Average"                | "Below Average"              |
+| "Confections"    | "Teatime Chocolate Biscuits"       | 9.2          | 8.53                 | 9.20                | "Over Average"                | "Below Average"              |
+| "Confections"    | "Valkoinen suklaa"                 | 16.25        | 14.95                | 16.25               | "Over Average"                | "Equal Average"              |
+| "Confections"    | "Zaanse koeken"                    | 9.5          | 9.14                 | 9.50                | "Over Average"                | "Equal Average"              |
+| "Dairy Products" | "Camembert Pierrot"                | 34           | 32.13                | 34.00               | "Over Average"                | "Equal Average"              |
+| "Dairy Products" | "Flotemysost"                      | 21.5         | 19.76                | 21.50               | "Over Average"                | "Equal Average"              |
+| "Dairy Products" | "Geitost"                          | 2.5          | 2.33                 | 2.50                | "Over Average"                | "Equal Average"              |
+| "Dairy Products" | "Gorgonzola Telino"                | 12.5         | 11.67                | 12.50               | "Over Average"                | "Equal Average"              |
+| "Dairy Products" | "Gudbrandsdalsost"                 | 36           | 33.45                | 36.00               | "Over Average"                | "Equal Average"              |
+| "Dairy Products" | "Mascarpone Fabioli"               | 32           | 30.72                | 32.00               | "Over Average"                | "Equal Average"              |
+| "Dairy Products" | "Mozzarella di Giovanni"           | 34.8         | 32.04                | 34.80               | "Over Average"                | "Below Average"              |
+| "Dairy Products" | "Queso Cabrales"                   | 21           | 19.60                | 21.00               | "Over Average"                | "Equal Average"              |
+| "Dairy Products" | "Queso Manchego La Pastora"        | 38           | 36.91                | 38.00               | "Over Average"                | "Equal Average"              |
+| "Dairy Products" | "Raclette Courdavault"             | 55           | 51.13                | 55.00               | "Over Average"                | "Equal Average"              |
+| "Grains/Cereals" | "Filo Mix"                         | 7            | 6.76                 | 7.00                | "Over Average"                | "Equal Average"              |
+| "Grains/Cereals" | "Gnocchi di nonna Alice"           | 38           | 35.42                | 38.00               | "Over Average"                | "Equal Average"              |
+| "Grains/Cereals" | "Gustaf's Knäckebröd"              | 21           | 20.40                | 21.00               | "Over Average"                | "Equal Average"              |
+| "Grains/Cereals" | "Ravioli Angelo"                   | 19.5         | 18.14                | 19.50               | "Over Average"                | "Equal Average"              |
+| "Grains/Cereals" | "Tunnbröd"                         | 9            | 8.37                 | 9.00                | "Over Average"                | "Equal Average"              |
+| "Grains/Cereals" | "Wimmers gute Semmelknödel"        | 33.25        | 31.03                | 33.25               | "Over Average"                | "Equal Average"              |
+| "Meat/Poultry"   | "Pâté chinois"                     | 24           | 22.40                | 24.00               | "Over Average"                | "Equal Average"              |
+| "Meat/Poultry"   | "Tourtière"                        | 7.45         | 6.80                 | 7.45                | "Over Average"                | "Below Average"              |
+| "Produce"        | "Longlife Tofu"                    | 10           | 8.77                 | 8.00                | "Over Average"                | "Over Average"               |
+| "Produce"        | "Manjimup Dried Apples"            | 53           | 50.55                | 53.00               | "Over Average"                | "Equal Average"              |
+| "Produce"        | "Tofu"                             | 23.25        | 21.35                | 23.25               | "Over Average"                | "Equal Average"              |
+| "Produce"        | "Uncle Bob's Organic Dried Pears"  | 30           | 29.17                | 30.00               | "Over Average"                | "Equal Average"              |
+| "Seafood"        | "Boston Crab Meat"                 | 18.4         | 17.23                | 18.40               | "Over Average"                | "Below Average"              |
+| "Seafood"        | "Carnarvon Tigers"                 | 62.5         | 59.72                | 62.50               | "Over Average"                | "Equal Average"              |
+| "Seafood"        | "Escargots de Bourgogne"           | 13.25        | 12.66                | 13.25               | "Over Average"                | "Equal Average"              |
+| "Seafood"        | "Gravad lax"                       | 26           | 23.40                | 23.40               | "Over Average"                | "Over Average"               |
+| "Seafood"        | "Ikura"                            | 31           | 29.68                | 31.00               | "Over Average"                | "Equal Average"              |
+| "Seafood"        | "Inlagd Sill"                      | 19           | 17.90                | 19.00               | "Over Average"                | "Equal Average"              |
+| "Seafood"        | "Jack's New England Clam Chowder"  | 9.65         | 9.19                 | 9.65                | "Over Average"                | "Below Average"              |
+| "Seafood"        | "Konbu"                            | 6            | 5.76                 | 6.00                | "Over Average"                | "Equal Average"              |
+| "Seafood"        | "Nord-Ost Matjeshering"            | 25.89        | 24.27                | 25.89               | "Over Average"                | "Below Average"              |
+| "Seafood"        | "Röd Kaviar"                       | 15           | 14.36                | 15.00               | "Over Average"                | "Equal Average"              |
+| "Seafood"        | "Rogede sild"                      | 9.5          | 9.23                 | 9.50                | "Over Average"                | "Equal Average"              |
+| "Seafood"        | "Spegesild"                        | 12           | 11.11                | 12.00               | "Over Average"                | "Equal Average"              |
+
+
+</details>
+
 ### ✅ **Question 9**
 The Sales Team wants to build a list of KPIs to measure employees' performances. In order to help them they asked you to provide them a list of employees with:
 
@@ -503,6 +913,83 @@ Output example
 </summary>
 
 ![Q9_output](/img/Q9.png)
+
+</details>
+
+<details>
+<summary>
+💡 Solution
+</summary>
+
+```sql
+WITH cte_kpi AS (
+SELECT
+    CONCAT(e.first_name, ' ', e.last_name) AS employee_full_name,
+	e.title AS employee_title,
+	ROUND(
+		SUM(d.quantity * d.unit_price)::NUMERIC,
+		2) AS total_sale_amount_excluding_discount,
+    COUNT(DISTINCT d.order_id) AS total_number_orders,
+    COUNT(d.*) AS total_number_entries,
+		ROUND(
+		SUM(d.discount*(d.quantity * d.unit_price))::NUMERIC,
+		2) AS total_discount_amount,
+	ROUND(
+		SUM((1 - d.discount)*(d.quantity * d.unit_price))::NUMERIC,
+		2) AS total_sale_amount_including_discount
+FROM orders AS o
+INNER JOIN employees AS e
+ON o.employee_id = e.employee_id
+INNER JOIN order_details AS d
+ON d.order_id = o.order_id
+INNER JOIN products AS p
+ON d.product_id = p.product_id
+GROUP BY 
+	employee_full_name,
+	employee_title
+)
+SELECT 
+	employee_full_name,
+	employee_title,
+	total_sale_amount_excluding_discount,
+	total_number_orders,
+	total_number_entries,
+	ROUND(
+		SUM(total_sale_amount_excluding_discount/total_number_entries),
+		   2) AS average_amount_per_entry,
+	ROUND(
+		SUM(total_sale_amount_excluding_discount/total_number_orders),
+		   2) AS average_amount_per_order,
+	total_discount_amount,
+	total_sale_amount_including_discount,
+	SUM(ROUND(
+		(total_sale_amount_excluding_discount-total_sale_amount_including_discount)/total_sale_amount_excluding_discount*100,
+		2)) AS total_discount_percentage
+FROM cte_kpi
+GROUP BY
+	employee_full_name,
+	employee_title,
+	total_sale_amount_excluding_discount,
+	total_number_orders,
+	total_number_entries,
+	total_sale_amount_including_discount,
+	total_discount_amount
+ORDER BY total_sale_amount_including_discount DESC;
+```
+
+| "employee_full_name" | "employee_title"           | "total_sale_amount_excluding_discount" | "total_number_orders" | "total_number_entries" | "average_amount_per_entry" | "average_amount_per_order" | "total_discount_amount" | "total_sale_amount_including_discount" | "total_discount_percentage" |
+|----------------------|----------------------------|----------------------------------------|-----------------------|------------------------|----------------------------|----------------------------|-------------------------|----------------------------------------|-----------------------------|
+| "Margaret Peacock"   | "Sales Representative"     | 250187.45                              | 156                   | 420                    | 595.68                     | 1603.77                    | 17296.60                | 232890.85                              | 6.91                        |
+| "Janet Leverling"    | "Sales Representative"     | 213051.30                              | 127                   | 321                    | 663.71                     | 1677.57                    | 10238.46                | 202812.84                              | 4.81                        |
+| "Nancy Davolio"      | "Sales Representative"     | 202143.71                              | 123                   | 345                    | 585.92                     | 1643.44                    | 10036.11                | 192107.60                              | 4.96                        |
+| "Andrew Fuller"      | "Vice President, Sales"    | 177749.26                              | 96                    | 241                    | 737.55                     | 1851.55                    | 11211.51                | 166537.76                              | 6.31                        |
+| "Laura Callahan"     | "Inside Sales Coordinator" | 133301.03                              | 104                   | 260                    | 512.70                     | 1281.74                    | 6438.75                 | 126862.28                              | 4.83                        |
+| "Robert King"        | "Sales Representative"     | 141295.99                              | 72                    | 176                    | 802.82                     | 1962.44                    | 16727.76                | 124568.23                              | 11.84                       |
+| "Anne Dodsworth"     | "Sales Representative"     | 82964.00                               | 43                    | 107                    | 775.36                     | 1929.40                    | 5655.93                 | 77308.07                               | 6.82                        |
+| "Michael Suyama"     | "Sales Representative"     | 78198.10                               | 67                    | 168                    | 465.46                     | 1167.14                    | 4284.97                 | 73913.13                               | 5.48                        |
+| "Steven Buchanan"    | "Sales Manager"            | 75567.75                               | 42                    | 117                    | 645.88                     | 1799.23                    | 6775.47                 | 68792.28                               | 8.97                        |
+
+
 
 </details>
 
