@@ -29,13 +29,13 @@ WITH cte_price AS (
 		c.category_name,
 		p.product_name,
 		p.unit_price,
-		ROUND(AVG(o.unit_price)::NUMERIC,2) AS average_unit_price,
-		ROUND((PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY o.unit_price))::NUMERIC,2) AS median_unit_price
+		ROUND(AVG(d.unit_price)::NUMERIC,2) AS average_unit_price,
+		ROUND((PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY d.unit_price))::NUMERIC,2) AS median_unit_price
 	FROM categories AS c
 	INNER JOIN products AS p
 	ON c.category_id = p.category_id
-	INNER JOIN order_details AS o
-	ON p.product_id = o.product_id
+	INNER JOIN order_details AS d
+	ON p.product_id = d.product_id
 	WHERE p.discontinued = 0
 	GROUP BY 
 		c.category_name,
