@@ -527,6 +527,7 @@ SELECT * FROM cte_freight
 WHERE total_number_orders > 35
 ORDER BY total_freight DESC;
 ```
+
 +───────────────+────────────────────────+──────────────────+
 | "year_month"  | "total_number_orders"  | "total_freight"  |
 +───────────────+────────────────────────+──────────────────+
