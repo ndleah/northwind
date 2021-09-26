@@ -23,8 +23,8 @@ WITH cte_price AS (
 SELECT
 	d.product_id,
 	p.product_name,
-	LEAD(d.unit_price) OVER (PARTITION BY p.product_name ORDER BY o.order_date) AS current_price,
-	LAG(d.unit_price) OVER (PARTITION BY p.product_name ORDER BY o.order_date) AS previous_unit_price
+	ROUND(LEAD(d.unit_price) OVER (PARTITION BY p.product_name ORDER BY o.order_date)::NUMERIC,2) AS current_price,
+	ROUND(LAG(d.unit_price) OVER (PARTITION BY p.product_name ORDER BY o.order_date)::NUMERIC,2) AS previous_unit_price
 FROM products AS p
 INNER JOIN order_details AS d
 ON p.product_id = d.product_id
@@ -46,11 +46,3 @@ GROUP BY
 	c.previous_unit_price
 HAVING COUNT(DISTINCT d.order_id) > 10
 AND ROUND(100*(c.current_price - c.previous_unit_price)/c.previous_unit_price) NOT BETWEEN 20 AND 30;
-
---Result:
-+──────────────────────────────────+──────────────────+────────────────────────+────────────────────────+
-| "product_name"                   | "current_price"  | "previous_unit_price"  | "percentage_increase"  |
-+──────────────────────────────────+──────────────────+────────────────────────+────────────────────────+
-| "Mozzarella di Giovanni"         | 27.8             | 34.8                   | -20                    |
-| "Singaporean Hokkien Fried Mee"  | 11.2             | 9.8                    | 14                     |
-+──────────────────────────────────+──────────────────+────────────────────────+────────────────────────+

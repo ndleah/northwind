@@ -502,9 +502,38 @@ Output example
 💡 Solution
 </summary>
 
-
-
-
+```sql
+WITH cte_freight AS (
+	SELECT
+		CONCAT(EXTRACT(YEAR FROM order_date), 
+			   '-', 
+			   EXTRACT(MONTH FROM order_date), 
+			   '-01'
+			  ) AS year_month,
+		COUNT(*) AS total_number_orders,
+		ROUND(
+			SUM(freight)
+			)::INT AS total_freight
+	FROM orders
+	WHERE order_date >= '1997-01-01' AND order_date < '1998-01-01'
+	GROUP BY 
+		CONCAT(EXTRACT(YEAR FROM order_date), 
+			   '-', 
+			   EXTRACT(MONTH FROM order_date), 
+			   '-01'
+			  )
+)
+SELECT * FROM cte_freight
+WHERE total_number_orders > 35
+ORDER BY total_freight DESC;
+```
++───────────────+────────────────────────+──────────────────+
+| "year_month"  | "total_number_orders"  | "total_freight"  |
++───────────────+────────────────────────+──────────────────+
+| "1997-10-01"  | 38                     | 3946             |
+| "1997-12-01"  | 48                     | 3758             |
+| "1997-9-01"   | 37                     | 3237             |
++───────────────+────────────────────────+──────────────────+
 
 </details>
 

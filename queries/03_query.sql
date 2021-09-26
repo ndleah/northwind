@@ -27,17 +27,3 @@ ON m.employee_id = e.reports_to
 ORDER BY
     employee_age,
 	employee_full_name;
-
---Result
-+───────────────────────+─────────────────────────────+─────────────────+──────────────────────+──────────────────────────+
-| "employee_full_name"  | "employee_title"            | "employee_age"  | "manager_full_name"  | "manager_title"          |
-+───────────────────────+─────────────────────────────+─────────────────+──────────────────────+──────────────────────────+
-| "Anne Dodsworth"      | "Sales Representative"      | 28              | "Steven Buchanan"    | "Sales Manager"          |
-| "Janet Leverling"     | "Sales Representative"      | 28              | "Andrew Fuller"      | "Vice President, Sales"  |
-| "Michael Suyama"      | "Sales Representative"      | 30              | "Steven Buchanan"    | "Sales Manager"          |
-| "Robert King"         | "Sales Representative"      | 33              | "Steven Buchanan"    | "Sales Manager"          |
-| "Laura Callahan"      | "Inside Sales Coordinator"  | 36              | "Andrew Fuller"      | "Vice President, Sales"  |
-| "Steven Buchanan"     | "Sales Manager"             | 38              | "Andrew Fuller"      | "Vice President, Sales"  |
-| "Nancy Davolio"       | "Sales Representative"      | 43              | "Andrew Fuller"      | "Vice President, Sales"  |
-| "Margaret Peacock"    | "Sales Representative"      | 55              | "Andrew Fuller"      | "Vice President, Sales"  |
-+───────────────────────+─────────────────────────────+─────────────────+──────────────────────+──────────────────────────+

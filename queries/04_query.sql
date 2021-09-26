@@ -15,22 +15,26 @@ Finally order the results by total freight (descending order).
 ***********************************/
 
 -- Solution Query
-WITH cte_freight AS ( 
+WITH cte_freight AS (
 	SELECT
-		required_date AS year_month,
+		CONCAT(EXTRACT(YEAR FROM order_date), 
+			   '-', 
+			   EXTRACT(MONTH FROM order_date), 
+			   '-01'
+			  ) AS year_month,
 		COUNT(*) AS total_number_orders,
 		ROUND(
 			SUM(freight)
 			)::INT AS total_freight
 	FROM orders
-	GROUP BY required_date
-	)
+	WHERE order_date >= '1997-01-01' AND order_date < '1998-01-01'
+	GROUP BY 
+		CONCAT(EXTRACT(YEAR FROM order_date), 
+			   '-', 
+			   EXTRACT(MONTH FROM order_date), 
+			   '-01'
+			  )
+)
 SELECT * FROM cte_freight
-WHERE EXTRACT(YEAR FROM year_month) BETWEEN 1997 AND 1998
-AND total_number_orders > 35
+WHERE total_number_orders > 35
 ORDER BY total_freight DESC;
-
---Result
-SELECT
-		EXTRACT(MONTH FROM txn_date) AS month_part,
-		TO_CHAR(txn_date, 'Month') AS month,

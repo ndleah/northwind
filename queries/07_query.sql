@@ -38,35 +38,3 @@ ORDER BY
 	supplier_region,
 	c.category_name,
 	p.unit_price;
-	
---Result:
-+──────────────────+────────────────────+───────────────────+───────────────────+──────────────────+
-| "category_name"  | "supplier_region"  | "units_in_stock"  | "units_on_order"  | "reorder_level"  |
-+──────────────────+────────────────────+───────────────────+───────────────────+──────────────────+
-| "Condiments"     | "America"          | 113               | 0                 | 25               |
-| "Confections"    | "America"          | 17                | 0                 | 0                |
-| "Meat/Poultry"   | "America"          | 21                | 0                 | 10               |
-| "Meat/Poultry"   | "America"          | 115               | 0                 | 20               |
-| "Beverages"      | "Asia-Pacific"     | 15                | 10                | 30               |
-| "Condiments"     | "Asia-Pacific"     | 24                | 0                 | 5                |
-| "Confections"    | "Asia-Pacific"     | 29                | 0                 | 10               |
-| "Grains/Cereals" | "Asia-Pacific"     | 38                | 0                 | 25               |
-| "Meat/Poultry"   | "Asia-Pacific"     | 0                 | 0                 | 0                |
-| "Meat/Poultry"   | "Asia-Pacific"     | 0                 | 0                 | 0                |
-| "Produce"        | "Asia-Pacific"     | 20                | 0                 | 10               |
-| "Seafood"        | "Asia-Pacific"     | 42                | 0                 | 0                |
-| "Beverages"      | "Europe"           | 52                | 0                 | 10               |
-| "Beverages"      | "Europe"           | 111               | 0                 | 15               |
-| "Beverages"      | "Europe"           | 20                | 0                 | 15               |
-| "Condiments"     | "Europe"           | 4                 | 100               | 20               |
-| "Condiments"     | "Europe"           | 76                | 0                 | 0                |
-| "Condiments"     | "Europe"           | 0                 | 0                 | 0                |
-| "Condiments"     | "Europe"           | 53                | 0                 | 0                |
-| "Condiments"     | "Europe"           | 120               | 0                 | 25               |
-| "Condiments"     | "Europe"           | 6                 | 0                 | 0                |
-| "Dairy Products" | "Europe"           | 22                | 30                | 30               |
-| "Dairy Products" | "Europe"           | 86                | 0                 | 0                |
-| "Produce"        | "Europe"           | 15                | 0                 | 10               |
-| "Seafood"        | "Europe"           | 85                | 0                 | 10               |
-| "Seafood"        | "Europe"           | 123               | 0                 | 30               |
-+──────────────────+────────────────────+───────────────────+───────────────────+──────────────────+

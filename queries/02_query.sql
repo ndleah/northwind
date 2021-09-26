@@ -31,18 +31,3 @@ WITH cte_avg_days AS (
 SELECT * FROM cte_avg_days
 WHERE average_days_between_order_shipping >= 5
 AND total_number_orders > 10;
-
---Result
-+─────────────────+────────────────────────────────────────+────────────────────────+
-| "ship_country"  | "average_days_between_order_shipping"  | "total_number_orders"  |
-+─────────────────+────────────────────────────────────────+────────────────────────+
-| "Austria"       | "5.89"                                 | "11"                   |
-| "Brazil"        | "8.12"                                 | "28"                   |
-| "France"        | "9.43"                                 | "23"                   |
-| "Germany"       | "5.38"                                 | "34"                   |
-| "Spain"         | "7.83"                                 | "12"                   |
-| "Sweden"        | "13.29"                                | "14"                   |
-| "UK"            | "6.25"                                 | "16"                   |
-| "USA"           | "7.89"                                 | "39"                   |
-| "Venezuela"     | "8.73"                                 | "18"                   |
-+─────────────────+────────────────────────────────────────+────────────────────────+
