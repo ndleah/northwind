@@ -27,7 +27,7 @@ WITH cte_freight AS (
 			SUM(freight)
 			)::INT AS total_freight
 	FROM orders
-	WHERE order_date >= '1997-01-01' AND order_date < '1998-01-01'
+	WHERE order_date >= '1997-01-01' AND order_date < '1998-12-31'
 	GROUP BY 
 		CONCAT(EXTRACT(YEAR FROM order_date), 
 			   '-', 
