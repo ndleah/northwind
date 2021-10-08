@@ -189,24 +189,87 @@ Nevertheless, to have a further understanding of how each of these questions wil
 
 ## Findings
 
-### The Pricing Strategy
+### Logistics Performance
+
+When it comes to logistics performance, I discovered a negative relationship between shipping days and order quantity (Figure 1). In other words, the greater the number of shipping days required, the lower the customer demand for that brand. According to Radocchia (2019), customers are beginning to expect fewer and fewer delivery services. Orders with a long average shipping day, namely 5-7 days, have a higher number of cancellations, and brands that fail to meet this condition have a decrease in purchases.
+
+![Correlation Between Shipping Days and Number Orders](img/log_corr_days_orders.png)
+
+A closer look at logistics performance by country in 1998 (Figure 2) reveals that Germany, the United Kingdom, and Austria have the quickest order delivery capabilities, at 5.38, 5.89, and 6.25 days, respectively. Meanwhile, Sweden, France, and Venezuela have the slowest order shipping speeds among the countries listed. This needs to be enhanced from the logistics team in order to improve shipping quality in these areas and improve the customer experience.
+
+![Shipping Performance by Countries](img/log_days_by_countries.png)
+
+Aside from transportation, inventory control is critical to ensuring the circulation of goods and the availability of goods to consumers. Figure 3 depicts a positive relationship between Units in Stock and Reorder Level. This demonstrates that the Logistics team's inventory management is effective because for items with a high number of re-orders, the team always ensures to import in larger quantities to meet customer needs.
+
+![Correlation Between Units In Stock and Reorder Level](img/log_corr_stock_reorder.png)
+As demonstrated in Figure 4,Meat/Poultry and Condiments are the top 2 categories with highest reorder level in America. Similarly, top categories with highest reorder level are Beverage and Grain/Cereals for Asia Pacific countries while Seafood, Condiments and Beverages are accounted for the largest amount of reorder in Europe nations. By observing the demand of order in these categories, Logistics team can make better decision on importing high-demand goods and effectively control their inventory management better.
+
+![Shipping Performance by Countries](img/log_reorder_regions.png)
+### Sale Performance
+
+In terms of sale performance, a further inspection of the sale contribution by different factors, specifically, by Categories and Employees is conducted.
+
+Firstly, as transparent in Figure 5, Beverage (21.2%), Dairy Products (18.6%) and Meat/Poultry (13.2%) are accounted for the largest sale amount as comparing to other sectors. By contrast, Produce and Grains/Cereals are the least contribution to the total sale amount with the sale contribution percentage are 7.8% and 7.4%, respectively.
+
+Another interesting fact is that when I combine the findings related to Reorder Level by Regions from the Logistics team above, it is clear that Europe and America are the top areas with the highest sale contribution to the top sale contributed categories, to name a few as Beverages, Dairy Products and Meat/Poultry category. However, Asia Pacific have the biggest demand for the Grains/Cereals, which is belong to the least contributed sector among all. This demonstrated that the target market of the Northwind Traders are located in America and Europe countries while Asia Pacific countries are potential to expand the market share and improve sale performance.
+
+![Sale Contribution by Categories](img/sale_con_categories.png)
+
+Regarding the sale contribution by employees (Figure 6), it shown that Margaret Peacock, Janet Leverling and Nancy Davolio are the top employees with highest sale contribution in overall. Nevertheless, Steven Buchanan, Micheal Suyama and Anne Dodsworth accounted for the least sale contribution among all employees.
 
 
+![Sale Contribution by Employees](img/sale_con_employee.png)
+
+While there is no significant differences between Employee Titles and Ages for the sale contributions (Table 1), one thing should be noticed is that when looking at the sale performance of each employees by categories, it is transparent from the Figure 7 that employees who have highest sale contribution tend to perform well in the Beverage category.
 
 
+| "employee_full_name" | "employee_title"           | "employee_age" | "manager_full_name" | "manager_title"         |
+|----------------------|----------------------------|----------------|---------------------|-------------------------|
+| "Anne Dodsworth"     | "Sales Representative"     | 28             | "Steven Buchanan"   | "Sales Manager"         |
+| "Janet Leverling"    | "Sales Representative"     | 28             | "Andrew Fuller"     | "Vice President, Sales" |
+| "Michael Suyama"     | "Sales Representative"     | 30             | "Steven Buchanan"   | "Sales Manager"         |
+| "Robert King"        | "Sales Representative"     | 33             | "Steven Buchanan"   | "Sales Manager"         |
+| "Laura Callahan"     | "Inside Sales Coordinator" | 36             | "Andrew Fuller"     | "Vice President, Sales" |
+| "Steven Buchanan"    | "Sales Manager"            | 38             | "Andrew Fuller"     | "Vice President, Sales" |
+| "Nancy Davolio"      | "Sales Representative"     | 43             | "Andrew Fuller"     | "Vice President, Sales" |
+| "Margaret Peacock"   | "Sales Representative"     | 55             | "Andrew Fuller"     | "Vice President, Sales" |
+
+\begin{center}
+Table 1: Employees Information
+\end{center}
+
+![Sale Performance of Employees by Categories](img/sale_per.png)
+
+Assessing the sale performance in terms of sale promotion, it is noticed that there is a negative correlation between the total discount percentage with number of orders (Figure 8). This mean that customers are not necessarily attracted by discount strategy by Northwinder and thus, this stated a problem in defining sale and pricing strategy, which need to be addressed.
+
+![Correlation Between Discount Percentage with Number of Orders](img/sale_corr_discount_orders.png)
+
+By saying that, the next step needs to be taken is observing how customers would have different behaviors regarding price range for each category. It is said that in the Figure 9, the largest number of orders were made for those product with price ranges are "Below $20" is belong to Beverage, Confections and Seafood, while other categories such as Condiments, Dairy Products, meat/Poultry are being prefered with the price ranges from "$20 - $50". 
+
+Moreover, another interesting finding is that Dairy Products, Meat/Poultry and Porduce also have the highest number for orders "Over $50". This emphasize that people who are willing to pay the price from "$20 - $50" is willing to pay more for for those certain categories. This is extremely useful as this will provide more information for the Pricing Team to adjust their pricing strategy in the future.
+
+![Pricing Performance by Categories](img/pricing.png)
+
+\newpage
+
+# Conclusion
+
+In this assignment, SQL executes query to uncover business questions from different departments. Then, R is used to present this information by plotting onto different visualizations. In terms of Logistics performance, Northwinder are doing well on the inventory management for on-demand goods while needing to optimize and improve the shipping speed in certain areas. On the other hand, it seems like Beverage is accounted for the largest proportion of sale amount, with the preferred price ranges at "Below $20". However, the Pricing and Product team might want to adjust the Sale Promotion strategy since it is shown that the current plan of discounting product prices does not have any significant impact on the customer demand. Furthermore, there is no clear demographic patterns of sale performance in terms of employees as everyone seems to have different performance in spite of ages, seniority level and positions.
 
 
 \newpage
 
 # References
 
-1. Morato, L. (2020). Answering Business Questions with SQL - Towards Data Science. Medium. [https://towardsdatascience.com/answering-business-questions-with-sql-fd0315707980](https://towardsdatascience.com/answering-business-questions-with-sql-fd0315707980)X
+1. Morato, L. (2020). Answering Business Questions with SQL - Towards Data Science. Medium. [https://towardsdatascience.com/answering-business-questions-with-sql-fd0315707980](https://towardsdatascience.com/answering-business-questions-with-sql-fd0315707980)
 
-2. Culincu, D. C. (2018a). SQL for Data Analysis — part I - Diana Cristina Culincu. Medium. [https://medium.com/@diana.culincu/sql-for-data-analysis-part-i-95ce957b2c4](https://medium.com/@diana.culincu/sql-for-data-analysis-part-i-95ce957b2c4) X
+2. Culincu, D. C. (2018a). SQL for Data Analysis — part I - Diana Cristina Culincu. Medium. [https://medium.com/@diana.culincu/sql-for-data-analysis-part-i-95ce957b2c4](https://medium.com/@diana.culincu/sql-for-data-analysis-part-i-95ce957b2c4) 
 
-3. Culincu, D. C. (2018b). SQL for Data Analysis — part I - Diana Cristina Culincu. Medium. [https://medium.com/@diana.culincu/sql-for-data-analysis-part-i-95ce957b2c4](https://medium.com/@diana.culincu/sql-for-data-analysis-part-i-95ce957b2c4) X
+3. Culincu, D. C. (2018b). SQL for Data Analysis — part I - Diana Cristina Culincu. Medium. [https://medium.com/@diana.culincu/sql-for-data-analysis-part-i-95ce957b2c4](https://medium.com/@diana.culincu/sql-for-data-analysis-part-i-95ce957b2c4) 
 
-4. Grupman, C. (2021). Want a Job in Data? Learn SQL. Dataquest. [https://www.dataquest.io/blog/why-sql-is-the-most-important-language-to-learn/](https://www.dataquest.io/blog/why-sql-is-the-most-important-language-to-learn/) X
+4. Grupman, C. (2021). Want a Job in Data? Learn SQL. Dataquest. [https://www.dataquest.io/blog/why-sql-is-the-most-important-language-to-learn/](https://www.dataquest.io/blog/why-sql-is-the-most-important-language-to-learn/)
+
+Radocchia, S. (2019). Why Consumer Demand For Faster Shipping Will Force Supply Chains To Change Strategies. Forbes. [https://www.forbes.com/sites/samantharadocchia/2019/01/18/why-consumer-demand-for-faster-shipping-will-force-supply-chains-to-change-strategies/?sh=1763300c375f](Radocchia, S. (2019). Why Consumer Demand For Faster Shipping Will Force Supply Chains To Change Strategies. Forbes. https://www.forbes.com/sites/samantharadocchia/2019/01/18/why-consumer-demand-for-faster-shipping-will-force-supply-chains-to-change-strategies/?sh=1763300c375f)
 
 \newpage
 
@@ -789,7 +852,7 @@ WITH cte_freight AS (
 			SUM(freight)
 			)::INT AS total_freight
 	FROM orders
-	WHERE order_date >= '1997-01-01' AND order_date < '1998-01-01'
+	WHERE order_date >= '1997-01-01' AND order_date < '1998-12-31'
 	GROUP BY 
 		CONCAT(EXTRACT(YEAR FROM order_date), 
 			   '-', 
@@ -804,9 +867,14 @@ ORDER BY total_freight DESC;
 
 | "year_month" | "total_number_orders" | "total_freight" |
 |--------------|-----------------------|-----------------|
+| "1998-4-01"  | 74                    | 6394            |
+| "1998-1-01"  | 55                    | 5463            |
+| "1998-3-01"  | 73                    | 5379            |
+| "1998-2-01"  | 54                    | 4273            |
 | "1997-10-01" | 38                    | 3946            |
 | "1997-12-01" | 48                    | 3758            |
 | "1997-9-01"  | 37                    | 3237            |
+
 
 \blandscape
 
