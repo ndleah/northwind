@@ -1,6 +1,8 @@
 library(tidyverse)
 library(here)
 library(ggplot2)
+library(sqldf)
+library(ggrepel)
 
 q1 <- read_csv(here("csv","01_results.csv"))
 q2 <- read_csv(here("csv","02_results.csv"))
@@ -114,13 +116,118 @@ ggplot(q7) +
     plot.subtitle = element_text(size = 13L,
                                  hjust = 0.5)
   ) +
-  facet_wrap(vars(supplier_region))
+  facet_wrap(vars(supplier_region)) +
+  theme(legend.position = "bottom")
 
 #Sale Performances
 #Question 3
 #Question 9
 #Question 10
 
-q3
-q9
-q10
+# Sale Contribution by Categories
+category <- sqldf(
+  "SELECT
+      category_name,
+      SUM(total_sale_amount_including_discount) as total
+  FROM q10
+    GROUP BY category_name
+  "
+)
+# calculate percentage
+category <- category %>% 
+  arrange(desc(total)) %>%
+  mutate(prop = round(100 * total / sum(total),1))
+# get the position
+category <- category %>% 
+  mutate(csum = rev(cumsum(rev(total))), 
+         pos = total/2 + lead(csum, 1),
+         pos = if_else(is.na(pos), total/2, pos))
+# pie chart
+category %>% 
+  filter(prop > 0.01) %>% # filter out 0% value
+  ggplot(aes(x = "", y = total, fill = fct_inorder(category_name))) + 
+  geom_bar(stat = "identity", width = 1) +
+  geom_col(color = "black", width = 1) +
+  coord_polar("y", start = 0) + 
+  geom_label_repel(data = category %>% filter(prop > 0.01),
+                   aes(y = pos, label = paste0(prop, "%")),
+                   size = 4.5, nudge_x = 1, show.legend = FALSE) +
+  labs(
+    title = "Sale Contribution by Categories"
+  ) +
+  scale_fill_brewer(palette = "Pastel1") +
+  theme_classic() +
+  guides(fill = guide_legend(title = "categories")) +
+  ggthemes::theme_tufte() +
+  theme(plot.title = element_text(size = 15L, hjust = 0.5)) +
+  theme(legend.position = "bottom")
+
+# Sale Contribution by Employees
+employee <- sqldf(
+  "SELECT
+      employee_full_name,
+      SUM(total_sale_amount_including_discount) as total
+  FROM q10
+    GROUP BY employee_full_name
+  "
+)
+# calculate percentage
+employee <- employee %>% 
+  arrange(desc(total)) %>%
+  mutate(prop = round(100 * total / sum(total),1))
+# get the position
+employee <- employee %>% 
+  mutate(csum = rev(cumsum(rev(total))), 
+         pos = total/2 + lead(csum, 1),
+         pos = if_else(is.na(pos), total/2, pos))
+# pie chart
+employee %>% 
+  filter(prop > 0.01) %>% # filter out 0% value
+  ggplot(aes(x = "", y = total, fill = fct_inorder(employee_full_name))) + 
+  geom_bar(stat = "identity", width = 1) +
+  geom_col(color = "black", width = 1) +
+  coord_polar("y", start = 0) + 
+  geom_label_repel(data = employee %>% filter(prop > 0.01),
+                   aes(y = pos, label = paste0(prop, "%")),
+                   size = 4.5, nudge_x = 1, show.legend = FALSE) +
+  labs(
+    title = "Sale Contribution by Employees"
+  ) +
+  scale_fill_brewer(palette = "Set2") +
+  theme_classic() +
+  guides(fill = guide_legend(title = "Employee Names")) +
+  ggthemes::theme_tufte() +
+  theme(plot.title = element_text(size = 15L, hjust = 0.5))+
+  theme(legend.position = "bottom")
+
+# Sale Performance of Employees by Categories
+ggplot(q10) +
+  aes(
+    x = category_name,
+    fill = employee_full_name,
+    weight = total_sale_amount_including_discount
+  ) +
+  geom_bar() +
+  scale_fill_hue(direction = 1) +
+  labs(
+    x = "category",
+    y = "sale amount",
+    title = "Sale Performance of Employees by Categories",
+    fill = "Employees"
+  ) +
+  coord_flip() +
+  ggthemes::theme_par() +
+  theme(plot.title = element_text(size = 15L, hjust = 0.5)) +
+  theme(legend.position = "bottom")+
+  facet_wrap(vars(employee_full_name))
+
+# correlation between Units In Stock vs Reorder Level
+ggplot(q9, aes(x = total_discount_percentage, y = total_number_orders)) + 
+  geom_point(alpha = .6, , colour="#710193") + 
+  geom_smooth(method = 'lm', formula = y ~ x, colour="red") +
+  labs(title = "Discount vs Number of Orders",
+       x = "Total Discount Percentage",
+       y = "Total Number Orders") +
+  ggthemes::theme_par() +
+  theme(plot.title = element_text(hjust = 0.5))
+
