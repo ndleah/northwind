@@ -1066,6 +1066,11 @@ Output example
 
 </details>
 
+<details>
+<summary>
+💡 Solution
+</summary>
+	
 ```sql
 --Solution query
 WITH cte_kpi AS (
@@ -1109,7 +1114,7 @@ ORDER BY
 	category_name,
 	total_sale_amount_including_discount DESC;
 ```
-
+</details>
 
 ## ✨ Contribution
 
